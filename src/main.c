@@ -3,13 +3,14 @@
 int main() {
     init_ncurses();
 
-    int maxY, maxX;
-    getmaxyx(stdscr, maxY, maxX);
+    int max_y, max_x;
+    getmaxyx(stdscr, max_y, max_x);
 
-    WINDOW *title_win = newwin(1, maxY, 0, 0);
-    WINDOW *main_win = newwin(maxY - 1, maxX, 1, 0);
+    WINDOW* title_win = newwin(1, max_x, 0, 0);
+    WINDOW* main_win = newwin(max_y - 2, max_x, 1, 0);
+    WINDOW* status_win = newwin(1, max_x, max_y - 1, 0);
 
-    draw_title_bar(title_win, "Note-Taking App");
+    draw_title_bar(title_win, "DEEJ");
 
     Document doc;
     init_document(&doc);
@@ -29,9 +30,16 @@ int main() {
     keypad(main_win, TRUE);
 
     int ch;
-    while ((ch = wgetch(main_win)) != 'q') {
-        handle_input(ch, &doc);
-        render_document(main_win, &doc);
+    bool quit = false;
+    while (!quit) {
+        ch = wgetch(main_win);
+        if (ch == 'q' && doc.mode == MODE_NORMAL) {
+            quit = true;
+        } else {
+            handle_input(ch, &doc);
+            render_document(main_win, &doc);
+            draw_status_bar(status_win, &doc);
+        }
     }
 
     free_document(&doc);
