@@ -27,9 +27,40 @@
 # DEMO:
 ![ubuntu_OdBKrsX1op](https://github.com/user-attachments/assets/5010c5f5-8090-439d-bef9-386d85e14838)
 
+# Built-in Txt-based scripting language:
+    DEEJ is not only just a Note-taking application,
+    it is also a text editor and a text-based language with its very own functions.
+
+## **TODO**() Function:
+
+![ubuntu_Z7d0CBZ1A1](https://github.com/user-attachments/assets/4e164541-cc0b-4dfc-8073-961568486f28)
+
+# how to use TODO function:
+    Syntax required is as follows:
+    
+    {it MUST BE WRAPPED WITH DOUBLE ** followed with 'TODO'}
+    ie:
+    
+        **TODO**
+
+    you will also need also need Parenthesis () and content inside of the Parenthesis 
+    and ended with a semi-colon ';':
+ie: 
+-----------------------------------------------------------------------------------------------------------------------------------------
+    **TODO**(foo;)
+-----------------------------------------------------------------------------------------------------------------------------------------
+    this creates a TODO table with the content of `foo`
+     |IF YOU WOULD LIKE MULTIPLE ITEMS|
+    {IMPORTANT: you MUST have a comma between each item ',':
+ie:
+----------------------------------------------------------------------------------------------------------------------------------------- 
+         **TODO**(foo, bar;)
+-----------------------------------------------------------------------------------------------------------------------------------------
+    this creates a TODO table with contents `foo` and `bar`.
+
 # Normal mode:
 
 # Insert mode:
 
-#Visual mode:
+# Visual mode:
 
