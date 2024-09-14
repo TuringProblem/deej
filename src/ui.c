@@ -10,6 +10,7 @@ void init_ncurses() {
   init_pair(1, COLOR_WHITE, COLOR_BLUE);
   init_pair(2, COLOR_BLACK, COLOR_WHITE);
   init_pair(3, COLOR_BLACK, COLOR_GREEN);
+  curs_set(1); // Make the cursor visible by default
 }
 
 void cleanup_ncurses() { endwin(); }
@@ -61,5 +62,13 @@ void draw_status_bar(WINDOW *win, Document *doc) {
             doc->cursor_x + 1);
 
   wattroff(win, COLOR_PAIR(color_pair));
+  wrefresh(win);
+}
+
+void draw_sidebar(WINDOW *win) {
+  wclear(win);
+  box(win, 0, 0);
+  mvwprintw(win, 0, 2, " Files ");
+  // TODO: Implement file listing in the sidebar
   wrefresh(win);
 }
