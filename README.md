@@ -24,11 +24,12 @@
             ESC = NORMAL mode 
             
 
-# Normal Mode:
+# DEMO:
+![ubuntu_OdBKrsX1op](https://github.com/user-attachments/assets/5010c5f5-8090-439d-bef9-386d85e14838)
 
-![image](https://github.com/user-attachments/assets/e110a264-eddb-4249-b79a-75bea7781475)
+# Normal mode:
+
 # Insert mode:
 
-![image](https://github.com/user-attachments/assets/32c9144b-01ba-4164-ab8c-53b04956e52d)
-
+#Visual mode:
 
