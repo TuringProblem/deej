@@ -1,14 +1,21 @@
 #include "noteapp.h"
+#include <ncurses.h>
 
 int main() {
   init_ncurses();
+
+  display_deej_ascii_art(stdscr);
+
+  clear();
+  refresh();
 
   int max_y, max_x;
   getmaxyx(stdscr, max_y, max_x);
 
   WINDOW *title_win = newwin(1, max_x, 0, 0);
-  WINDOW *main_win =
-      newwin(max_y - 2, max_x - 20, 1, 20); // Reduced width for sidebar
+  WINDOW *main_win = newwin(max_y - 2, max_x - 20, 1,
+                            20); // Reduced width for sidebar TODO: if user has
+                                 // TODO -> allocate for the UI space
   WINDOW *status_win = newwin(1, max_x, max_y - 1, 0);
   WINDOW *sidebar_win = newwin(max_y - 2, 20, 1, 0);
 
@@ -39,6 +46,9 @@ int main() {
 
     int ch = wgetch(main_win);
     handle_input(ch, &doc, &quit);
+
+    wmove(main_win, doc.cursor_y + 1 - doc.scroll_offset, doc.cursor_x + 1);
+    wrefresh(main_win);
   }
 
   free_document(&doc);

@@ -37,7 +37,7 @@ void draw_status_bar(WINDOW *win, Document *doc);
 void draw_sidebar(WINDOW *win);
 void init_document(Document *doc);
 void free_document(Document *doc);
-void insert_char(Document *doc, char c);
+void insert_char(Document *dic, char c);
 void insert_newline(Document *doc);
 void delete_char(Document *doc);
 void delete_char_forward(Document *doc);

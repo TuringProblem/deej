@@ -1,5 +1,64 @@
 #include "noteapp.h"
 #include <ctype.h>
+#include <unistd.h>
+
+void display_art(WINDOW *win, const char **deej_ascii, int height, int width,
+                 int color_start, int color_end) {
+  int start_y = (LINES - height) / 2;
+  int start_x = (COLS - width) / 2;
+
+  for (int i = 0; i < height; i++) {
+    int color = color_start + (color_end - color_start) * i / (height - 1);
+    wattron(win, COLOR_PAIR(color) | A_BOLD);
+    mvwprintw(win, start_y + i, start_x, "%s", deej_ascii[i]);
+    wattroff(win, COLOR_PAIR(color) | A_BOLD);
+  }
+  wrefresh(win);
+}
+
+void display_deej_ascii_art(WINDOW *win) {
+  const char *deej_ascii[] = {
+      "    ____  ___________     __",   "   / __ \\/ ____/ ____/    / /",
+      "  / / / / __/ / __/ __   / / ",  " / /_/ / /___/ /___/ /_ / /  ",
+      "/_____/_____/_____/\\__//_/   ", "                             ",
+      "  Text Editor Extraordinaire ",  "                             ",
+      "   Press ENTER to continue   ",  "      Press 'q' to quit      "};
+
+  int height = sizeof(deej_ascii) / sizeof(deej_ascii[0]);
+  int width = strlen(deej_ascii[0]);
+
+  // Set up color pairs
+  init_pair(1, COLOR_CYAN, COLOR_BLACK);
+  init_pair(2, COLOR_BLUE, COLOR_BLACK);
+  init_pair(3, COLOR_GREEN, COLOR_BLACK);
+
+  int ch;
+  bool quit = false;
+  int frame = 0;
+  while (!quit) {
+    display_art(win, deej_ascii, height, width, 1 + frame % 3, 3 - frame % 3);
+    frame++;
+
+    // Check for user input
+    timeout(100); // Set a timeout for getch
+    ch = wgetch(win);
+    if (ch == '\n') {
+      break; // Exit the loop and continue to the filename input
+    } else if (ch == 'q' || ch == 'Q') {
+      quit = true; // Set quit flag to true
+    }
+
+    usleep(100000); // Sleep for 100ms
+  }
+
+  // Reset the timeout
+  timeout(-1);
+
+  if (quit) {
+    endwin();
+    exit(0);
+  }
+}
 
 char *clipboard = NULL;
 size_t clipboard_length = 0;
@@ -255,6 +314,9 @@ void handle_input(int ch, Document *doc, bool *quit) {
     // ... (implement visual mode commands)
     break;
   case MODE_COMMAND:
+    if (ch == 27) {
+      doc->mode = MODE_NORMAL;
+    }
     // ... (implement command mode input)
     break;
   }
