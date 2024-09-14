@@ -1,4 +1,10 @@
-# DEEJ Advanced Note Taker
+#      ____  ___________     __
+#    / __ \\/ ____/ ____/    / /
+#   / / / / __/ / __/ __   / / 
+#  / /_/ / /___/ /___/ /_ / /  
+# /_____/_____/_____/\\__//_/  
+# Text Editor Extraordinaire
+## Author: @Override
 
 ## Will have Vim Motions
     How to use:
