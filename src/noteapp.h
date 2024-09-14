@@ -10,6 +10,7 @@
 #define MAX_FILENAME 256
 #define MAX_LINES 1000
 #define MAX_LINE_LENGTH 1000
+#define MAX_TODO_ITEMS 15
 
 typedef enum { MODE_NORMAL, MODE_INSERT, MODE_VISUAL, MODE_COMMAND } EditorMode;
 
@@ -28,6 +29,20 @@ typedef struct {
   int scroll_offset;
   EditorMode mode;
 } Document;
+
+typedef struct {
+  char title[MAX_FILENAME];
+  char description[MAX_LINE_LENGTH];
+  bool completed;
+} TodoItem;
+
+typedef struct {
+  TodoItem items[MAX_TODO_ITEMS];
+  int count;
+} TodoList;
+
+// Declare the global TodoList variable
+extern TodoList todo_list;
 
 // Function prototypes
 void init_ncurses();
@@ -50,5 +65,10 @@ void copy_selection(Document *doc);
 void paste_clipboard(Document *doc);
 void handle_command(Document *doc, const char *command, bool *quit);
 void display_deej_ascii_art(WINDOW *win);
+int check_syntax(const char *line, int *indent_change);
+void parse_todo(const char *line);
+void render_todo_gui(WINDOW *win);
+void remove_todo(const char *line);
+bool line_contains_todo(const char *line);
 
 #endif // NOTE_APP_H

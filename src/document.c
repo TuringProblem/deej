@@ -25,6 +25,13 @@ void free_document(Document *doc) {
   }
 }
 
+int get_indentation(const char *line) {
+  int indent = 0;
+  while (line[indent] == ' ' || line[indent] == '\t') {
+    indent++;
+  }
+  return indent;
+}
 void insert_char(Document *doc, WINDOW *win, char c) {
   char *line = doc->buffer.lines[doc->cursor_y];
   size_t len = strlen(line);
@@ -35,21 +42,41 @@ void insert_char(Document *doc, WINDOW *win, char c) {
     line[doc->cursor_x] = c;
     doc->cursor_x++;
 
+    // Check for completed TODO syntax
+    if (c == ';') {
+      char *todo_start = strstr(line, "**TODO**(");
+      char *todo_end = strrchr(line, ';');
+      if (todo_start && todo_end && todo_end > todo_start) {
+        parse_todo(line);
+      }
+    }
+
     // Update only the current line
     mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
     wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
+
+    // Render TODO GUI if needed
+    if (todo_list.count > 0) {
+      render_todo_gui(win);
+    }
+
     wrefresh(win);
   }
 }
 
 void insert_newline(Document *doc, WINDOW *win) {
+
   if (doc->buffer.num_lines < MAX_LINES - 1) {
     char *current_line = doc->buffer.lines[doc->cursor_y];
     char *new_line = malloc(MAX_LINE_LENGTH);
 
+    int indent = get_indentation(current_line);
+
+    // Copy the rest of the current line to the new line
     strcpy(new_line, &current_line[doc->cursor_x]);
     current_line[doc->cursor_x] = '\0';
 
+    // Insert the new line
     memmove(&doc->buffer.lines[doc->cursor_y + 2],
             &doc->buffer.lines[doc->cursor_y + 1],
             (doc->buffer.num_lines - doc->cursor_y - 1) * sizeof(char *));
@@ -57,7 +84,16 @@ void insert_newline(Document *doc, WINDOW *win) {
     doc->buffer.lines[doc->cursor_y + 1] = new_line;
     doc->buffer.num_lines++;
     doc->cursor_y++;
-    doc->cursor_x = 0;
+
+    // Apply indentation to the new line
+    char indented_line[MAX_LINE_LENGTH] = {0};
+    for (int i = 0; i < indent; i++) {
+      indented_line[i] = ' ';
+    }
+    strcat(indented_line, new_line);
+    strcpy(new_line, indented_line);
+
+    doc->cursor_x = indent;
 
     // Refresh the entire window as line positions have changed
     render_document(win, doc);
@@ -67,9 +103,14 @@ void insert_newline(Document *doc, WINDOW *win) {
 void delete_char(Document *doc, WINDOW *win) {
   if (doc->cursor_x > 0) {
     char *line = doc->buffer.lines[doc->cursor_y];
+    bool had_todo = line_contains_todo(line);
     memmove(&line[doc->cursor_x - 1], &line[doc->cursor_x],
             strlen(&line[doc->cursor_x]) + 1);
     doc->cursor_x--;
+
+    if (had_todo && !line_contains_todo(line)) {
+      remove_todo(line);
+    }
 
     // Update only the current line
     mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
@@ -80,6 +121,10 @@ void delete_char(Document *doc, WINDOW *win) {
     char *current_line = doc->buffer.lines[doc->cursor_y];
     char *prev_line = doc->buffer.lines[doc->cursor_y - 1];
     size_t prev_len = strlen(prev_line);
+
+    if (line_contains_todo(current_line)) {
+      remove_todo(current_line);
+    }
 
     strcat(prev_line, current_line);
     free(current_line);
@@ -96,7 +141,6 @@ void delete_char(Document *doc, WINDOW *win) {
     render_document(win, doc);
   }
 }
-
 void delete_char_forward(Document *doc, WINDOW *win) {
   char *line = doc->buffer.lines[doc->cursor_y];
   if (line[doc->cursor_x] != '\0') {
@@ -123,7 +167,6 @@ void delete_char_forward(Document *doc, WINDOW *win) {
     render_document(win, doc);
   }
 }
-
 void render_document(WINDOW *win, Document *doc) {
   int win_height, win_width;
   getmaxyx(win, win_height, win_width);
@@ -145,6 +188,11 @@ void render_document(WINDOW *win, Document *doc) {
   // Highlight selected text in VISUAL mode
   if (doc->mode == MODE_VISUAL) {
     // ... (implement visual selection highlighting)
+  }
+
+  // Render TODO GUI if there are items
+  if (todo_list.count > 0) {
+    render_todo_gui(win);
   }
 
   // Position the cursor
