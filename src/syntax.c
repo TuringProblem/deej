@@ -32,24 +32,41 @@ int check_syntax(const char *line, int *indent_change) {
   }
   return -1;
 }
-
 void parse_todo(const char *line) {
   if (todo_list.count >= MAX_TODO_ITEMS)
     return;
 
-  char title[MAX_FILENAME] = {0};
-  char description[MAX_LINE_LENGTH] = {0};
+  char todos[MAX_LINE_LENGTH] = {0};
+  if (sscanf(line, "**TODO**(%[^)])", todos) == 1) {
+    // Clear existing TODOs
+    todo_list.count = 0;
 
-  // Check for the correct syntax
-  if (sscanf(line, "**TODO**(%[^{]{%[^}]});", title, description) == 2) {
-    // Correct syntax found, add the TODO item
-    TodoItem new_item = {0};
-    strncpy(new_item.title, title, MAX_FILENAME - 1);
-    strncpy(new_item.description, description, MAX_LINE_LENGTH - 1);
-    new_item.completed = false;
-    todo_list.items[todo_list.count++] = new_item;
+    // Check if the syntax ends with a semicolon
+    size_t len = strlen(todos);
+    if (len > 0 && todos[len - 1] == ';') {
+      todos[len - 1] = '\0'; // Remove the semicolon
+      char *token = strtok(todos, ",");
+      while (token != NULL && todo_list.count < MAX_TODO_ITEMS) {
+        // Trim leading and trailing whitespace
+        while (isspace(*token))
+          token++;
+        char *end = token + strlen(token) - 1;
+        while (end > token && isspace(*end))
+          end--;
+        *(end + 1) = '\0';
+
+        if (strlen(token) > 0) {
+          TodoItem new_item = {0};
+          strncpy(new_item.title, token, MAX_FILENAME - 1);
+          new_item.completed = false;
+          todo_list.items[todo_list.count++] = new_item;
+        }
+        token = strtok(NULL, ",");
+      }
+    }
   }
 }
+
 void remove_todo(const char *line) {
   char title[MAX_FILENAME] = {0};
   if (sscanf(line, "**TODO**(%[^{]", title) == 1) {

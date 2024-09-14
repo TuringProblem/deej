@@ -43,11 +43,14 @@ void insert_char(Document *doc, WINDOW *win, char c) {
     doc->cursor_x++;
 
     // Check for completed TODO syntax
-    if (c == ';') {
+    if (c == ')') {
       char *todo_start = strstr(line, "**TODO**(");
-      char *todo_end = strrchr(line, ';');
+      char *todo_end = strrchr(line, ')');
       if (todo_start && todo_end && todo_end > todo_start) {
-        parse_todo(line);
+        char *semicolon = strchr(todo_start, ';');
+        if (semicolon && semicolon < todo_end) {
+          parse_todo(line);
+        }
       }
     }
 
@@ -56,9 +59,7 @@ void insert_char(Document *doc, WINDOW *win, char c) {
     wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
 
     // Render TODO GUI if needed
-    if (todo_list.count > 0) {
-      render_todo_gui(win);
-    }
+    render_todo_gui(win);
 
     wrefresh(win);
   }
@@ -229,6 +230,25 @@ void handle_input(int ch, Document *doc, WINDOW *win, bool *quit) {
     case 'i':
       doc->mode = MODE_INSERT;
       curs_set(1);
+      break;
+    case 'd':
+      if (doc->cursor_y < doc->buffer.num_lines) {
+        char *current_line = doc->buffer.lines[doc->cursor_y];
+        if (line_contains_todo(current_line)) {
+          remove_todo(current_line);
+        }
+        free(current_line);
+        memmove(&doc->buffer.lines[doc->cursor_y],
+                &doc->buffer.lines[doc->cursor_y + 1],
+                (doc->buffer.num_lines - doc->cursor_y - 1) * sizeof(char *));
+
+        doc->buffer.num_lines--;
+        if (doc->cursor_y == doc->buffer.num_lines) {
+          doc->cursor_y--;
+        }
+        doc->cursor_x = 0;
+        render_document(win, doc);
+      }
       break;
     case 'v':
       doc->mode = MODE_VISUAL;
