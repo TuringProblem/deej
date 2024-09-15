@@ -8,40 +8,28 @@
    ## Author: ```@Override```
 
 ## Will have Vim Motions
-    How to use:
-        1) if you are in NORMAL mode, then the follow commands work:
-            j = <- {direction}
-            k = -> {direction}
-            h = ^(UP) {direction}
-            l = | (DOWN) {direction}
-            w = {next word to the RIGHT}
-            b = {next word to the LEFT}
-            p = PASTE {IMPORTANT: you have to YANK first}
-            i = INSERT mode
-    
-        2) if you are in VISUAL mode:
-            {IMPORTANT: you will still be able to use NORMAL MODE motions}
-            y = YANK
-            i = INSERT mode
-            ESC = NORMAL mode
-            
-
-        3) if you are in INSERT mode:
-            {IMPORTANT: you can type anthing but WILL NOT have NORMAL MODE movements}
-            ESC = NORMAL mode 
-            
-
 # DEMO:
 ![ubuntu_OdBKrsX1op](https://github.com/user-attachments/assets/5010c5f5-8090-439d-bef9-386d85e14838)
-
+### How to use;
+| ***Direction/Inputs*** | ***Normal** Mode* | ***Visual** Mode* | ***Insert** Mode* | ***DESCRIPTION***|
+|------------------|------------|-------------|-------------|-------------------------------------------|
+| **UP**| j | same as {*NORMAL*}| ---- | Moves the cursor *UP* to the line ***ABOVE*** by **one**.|
+|**DOWN**|k|same as {*NORMAL*}|----| Moves cursor *DOWN* to the line ***BELOW*** by **one**.|
+|**LEFT**| h | same as {*NORMAL*} | ---- | Moves cursor to the *LEFT* by **one**.|
+|**RIGHT**| l | same as {*NORMAL*} | ---- | Moves cursor to the *RIGHT* by **one**.|
+|**NEXT CHAR LEFT** | w | same as {*NORMAL*} | ---- | Moves cursor to the next word (*TO THE* ***__LEFT__***)|
+|**NEXT CHAR RIGHT** | b | same as {*NORMAL*} | ---- | Moves cursor to the next word (*TO THE* ***__RIGHT__***)|
+|{*NORMAL*} mode| N/A | ESC | same as {*VISUAL*} | Changes current state into ***NORMAL MODE***. |
+|{*INSERT*} mode| i | same as {*NORMAL*} | N/A| Changes current state into ***INSERT MODE***.| 
+|{*VISUAL*} mode| v | N/A | same as {*NORMAL*}| Changes current state into ***VISUAL MODE***.|
 # Built-in Txt-based scripting language:
-    DEEJ is not only just a Note-taking application,
-    it is also a text editor and a text-based language with its very own functions.
 
 ## **TODO**() Function:
 
 ![ubuntu_Z7d0CBZ1A1](https://github.com/user-attachments/assets/4e164541-cc0b-4dfc-8073-961568486f28)
 
+    DEEJ is not only just a Note-taking application,
+    it is also a text editor and a text-based language with its very own functions.
 # how to use TODO function:
     Syntax required is as follows:
     
