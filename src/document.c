@@ -4,7 +4,7 @@
 char *clipboard = NULL;
 size_t clipboard_length = 0;
 
-void init_document(Document* doc) {
+void init_document(Document *doc) {
   for (int i = 0; i < MAX_LINES; i++) {
     doc->buffer.lines[i] = NULL;
   }
@@ -19,13 +19,13 @@ void init_document(Document* doc) {
   doc->mode = MODE_NORMAL;
 }
 
-void free_document(Document* doc) {
+void free_document(Document *doc) {
   for (int i = 0; i < doc->buffer.num_lines; i++) {
     free(doc->buffer.lines[i]);
   }
 }
 
-int get_indentation(const char* line) {
+int get_indentation(const char *line) {
   int indent = 0;
   while (line[indent] == ' ' || line[indent] == '\t') {
     indent++;
@@ -34,40 +34,31 @@ int get_indentation(const char* line) {
 }
 
 void insert_char(Document *doc, WINDOW *win, char c) {
-    fprintf(stderr, "Entering insert_char with char: %c\n", c);
-    
-    if (doc == NULL || doc->buffer.lines[doc->cursor_y] == NULL) {
-        fprintf(stderr, "Error: NULL document or line in insert_char\n");
-        return;
-    }
-    
-    char *line = doc->buffer.lines[doc->cursor_y];
-    size_t len = strlen(line);
+  if (doc == NULL || doc->buffer.lines[doc->cursor_y] == NULL) {
+    return;
+  }
 
-    fprintf(stderr, "Current line before insertion: %s\n", line);
+  char *line = doc->buffer.lines[doc->cursor_y];
+  size_t len = strlen(line);
 
-    if (len < MAX_LINE_LENGTH - 1) {
-        memmove(&line[doc->cursor_x + 1], &line[doc->cursor_x], len - doc->cursor_x + 1);
-        line[doc->cursor_x] = c;
-        doc->cursor_x++;
+  if (len < MAX_LINE_LENGTH - 1) {
+    memmove(&line[doc->cursor_x + 1], &line[doc->cursor_x],
+            len - doc->cursor_x + 1);
+    line[doc->cursor_x] = c;
+    doc->cursor_x++;
 
-        fprintf(stderr, "Current line after insertion: %s\n", line);
+    parse_todo(line);
 
-        parse_todo(line);
+    // Update only the current line
+    mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
+    wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
 
-        // Update only the current line
-        mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
-        wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
-
-        if (should_render_todo_gui()) {
-            fprintf(stderr, "Rendering TODO GUI\n");
-            render_todo_gui(win);
-        }
-
-        wrefresh(win);
+    if (should_render_todo_gui()) {
+      render_todo_gui(win);
     }
 
-    fprintf(stderr, "Exiting insert_char\n");
+    wrefresh(win);
+  }
 }
 
 void insert_newline(Document *doc, WINDOW *win) {
@@ -104,83 +95,89 @@ void insert_newline(Document *doc, WINDOW *win) {
     render_document(win, doc);
   }
 }
-void delete_char(Document* doc, WINDOW* win) {
-    if (doc->cursor_x > 0) {
-        char* line = doc->buffer.lines[doc->cursor_y];
-        memmove(&line[doc->cursor_x - 1], &line[doc->cursor_x], strlen(&line[doc->cursor_x]) + 1);
-        doc->cursor_x--;
+void delete_char(Document *doc, WINDOW *win) {
+  if (doc->cursor_x > 0) {
+    char *line = doc->buffer.lines[doc->cursor_y];
+    memmove(&line[doc->cursor_x - 1], &line[doc->cursor_x],
+            strlen(&line[doc->cursor_x]) + 1);
+    doc->cursor_x--;
 
-        parse_todo(line);
+    parse_todo(line);
 
-        mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
-        wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
-        wclrtoeol(win);
+    mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
+    wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
+    wclrtoeol(win);
 
-        if (should_render_todo_gui()) {
-            render_todo_gui(win);
-        }
-
-        wrefresh(win);
-    } else if (doc->cursor_y > 0) {
-        // TODO: (existing code for merging lines)
-        
-        parse_todo(doc->buffer.lines[doc->cursor_y]);
-        
-        render_document(win, doc);
+    if (should_render_todo_gui()) {
+      render_todo_gui(win);
     }
+
+    wrefresh(win);
+  } else if (doc->cursor_y > 0) {
+    // TODO: (existing code for merging lines)
+
+    parse_todo(doc->buffer.lines[doc->cursor_y]);
+
+    render_document(win, doc);
+  }
 }
 void delete_char_forward(Document *doc, WINDOW *win) {
-    char *line = doc->buffer.lines[doc->cursor_y];
-    if (line[doc->cursor_x] != '\0') {
-        memmove(&line[doc->cursor_x], &line[doc->cursor_x + 1], strlen(&line[doc->cursor_x + 1]) + 1);
+  char *line = doc->buffer.lines[doc->cursor_y];
+  if (line[doc->cursor_x] != '\0') {
+    memmove(&line[doc->cursor_x], &line[doc->cursor_x + 1],
+            strlen(&line[doc->cursor_x + 1]) + 1);
 
-        parse_todo(line);
+    parse_todo(line);
 
-        mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
-        wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
-        wclrtoeol(win);
+    mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
+    wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
+    wclrtoeol(win);
 
-        if (should_render_todo_gui()) {
-            render_todo_gui(win);
-        }
-
-        wrefresh(win);
-    } else if (doc->cursor_y < doc->buffer.num_lines - 1) {
-        // TODO: (existing code for merging lines)
-        
-        parse_todo(doc->buffer.lines[doc->cursor_y]);
-        
-        render_document(win, doc);
+    if (should_render_todo_gui()) {
+      render_todo_gui(win);
     }
+
+    wrefresh(win);
+  } else if (doc->cursor_y < doc->buffer.num_lines - 1) {
+    // TODO: (existing code for merging lines)
+
+    parse_todo(doc->buffer.lines[doc->cursor_y]);
+
+    render_document(win, doc);
+  }
 }
 
 void render_document(WINDOW *win, Document *doc) {
-    int win_height, win_width;
-    getmaxyx(win, win_height, win_width);
+  int win_height, win_width;
+  getmaxyx(win, win_height, win_width);
 
-    werase(win);
-    box(win, 0, 0);
-    mvwprintw(win, 0, 2, " %s ", doc->filename);
+  werase(win);
+  box(win, 0, 0);
+  mvwprintw(win, 0, 2, " %s ", doc->filename);
 
-    int start_y = 1;
-    int start_x = 1;
+  int start_y = 1;
+  int start_x = 1;
 
-    for (int i = doc->scroll_offset; i < doc->buffer.num_lines && i - doc->scroll_offset < win_height - 2; i++) {
-        mvwprintw(win, start_y + i - doc->scroll_offset, start_x, "%.*s", win_width - 2, doc->buffer.lines[i]);
-    }
+  for (int i = doc->scroll_offset;
+       i < doc->buffer.num_lines && i - doc->scroll_offset < win_height - 2;
+       i++) {
+    mvwprintw(win, start_y + i - doc->scroll_offset, start_x, "%.*s",
+              win_width - 2, doc->buffer.lines[i]);
+  }
 
-    if (doc->mode == MODE_VISUAL) {
-        // TODO: (implement visual selection highlighting)
-    }
+  if (doc->mode == MODE_VISUAL) {
+    // TODO: (implement visual selection highlighting)
+  }
 
-    // Render TODO GUI if needed
-    if (should_render_todo_gui()) {
-        render_todo_gui(win);
-    }
+  // Render TODO GUI if needed
+  if (should_render_todo_gui()) {
+    render_todo_gui(win);
+  }
 
-    wmove(win, start_y + doc->cursor_y - doc->scroll_offset, start_x + doc->cursor_x);
+  wmove(win, start_y + doc->cursor_y - doc->scroll_offset,
+        start_x + doc->cursor_x);
 
-    wrefresh(win);
+  wrefresh(win);
 }
 
 void move_cursor(Document *doc, WINDOW *win, int dx, int dy) {
@@ -200,7 +197,7 @@ void move_cursor(Document *doc, WINDOW *win, int dx, int dy) {
   wrefresh(win);
 }
 
-void handle_input(int ch, Document* doc, WINDOW* win, bool* quit) {
+void handle_input(int ch, Document *doc, WINDOW *win, bool *quit) {
   switch (doc->mode) {
   case MODE_NORMAL:
     switch (ch) {
@@ -271,7 +268,6 @@ void handle_input(int ch, Document* doc, WINDOW* win, bool* quit) {
     // ... (implement visual mode commands)
     break;
   }
-
 }
 
 void display_art(WINDOW *win, const char **deej_ascii, int height, int width,

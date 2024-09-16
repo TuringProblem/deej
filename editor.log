@@ -1,0 +1,83 @@
+[2024-09-16 01:56:54] INFO src/main.c:9: Application started
+[2024-09-16 01:56:54] INFO src/view.c:20: View initialized successfully
+[2024-09-16 01:56:54] INFO src/controller.c:40: Editor initialized successfully
+[2024-09-16 01:56:59] INFO src/controller.c:136: File saved: teistlseiksjme
+[2024-09-16 01:57:04] INFO src/controller.c:56: Quit command received
+[2024-09-16 01:57:04] INFO src/controller.c:197: Editor cleanup completed
+[2024-09-16 01:57:04] INFO src/view.c:26: View cleanup completed
+[2024-09-16 01:57:04] INFO src/main.c:47: Application ended
+[2024-09-16 01:57:10] INFO src/main.c:9: Application started
+[2024-09-16 01:57:10] INFO src/view.c:20: View initialized successfully
+[2024-09-16 01:57:10] INFO src/controller.c:40: Editor initialized successfully
+[2024-09-16 01:57:29] ERROR src/main.c:34: Error handling input: Unable to open file for reading
+[2024-09-16 01:57:32] ERROR src/main.c:34: Error handling input: Unable to open file for reading
+[2024-09-16 01:57:35] INFO src/controller.c:136: File saved: seom
+[2024-09-16 01:57:38] ERROR src/main.c:34: Error handling input: Unable to open file for reading
+[2024-09-16 01:57:39] INFO src/controller.c:136: File saved: seom
+[2024-09-16 01:57:42] INFO src/controller.c:136: File saved: seom
+[2024-09-16 01:57:43] INFO src/controller.c:56: Quit command received
+[2024-09-16 01:57:43] INFO src/controller.c:197: Editor cleanup completed
+[2024-09-16 01:57:43] INFO src/view.c:26: View cleanup completed
+[2024-09-16 01:57:43] INFO src/main.c:47: Application ended
+[2024-09-16 01:57:47] INFO src/main.c:9: Application started
+[2024-09-16 01:57:47] INFO src/view.c:20: View initialized successfully
+[2024-09-16 01:57:47] INFO src/controller.c:40: Editor initialized successfully
+[2024-09-16 01:57:53] INFO src/controller.c:56: Quit command received
+[2024-09-16 01:57:53] INFO src/controller.c:197: Editor cleanup completed
+[2024-09-16 01:57:53] INFO src/view.c:26: View cleanup completed
+[2024-09-16 01:57:53] INFO src/main.c:47: Application ended
+[2024-09-16 02:04:38] INFO src/main.c:9: Application started
+[2024-09-16 02:04:38] INFO src/view.c:20: View initialized successfully
+[2024-09-16 02:04:38] INFO src/controller.c:40: Editor initialized successfully
+[2024-09-16 02:04:51] INFO src/controller.c:136: File saved: =
+[2024-09-16 02:04:52] INFO src/controller.c:56: Quit command received
+[2024-09-16 02:04:52] INFO src/controller.c:197: Editor cleanup completed
+[2024-09-16 02:04:52] INFO src/view.c:26: View cleanup completed
+[2024-09-16 02:04:52] INFO src/main.c:47: Application ended
+[2024-09-16 02:37:00] INFO src/main.c:9: Application started
+[2024-09-16 02:37:00] INFO src/view.c:20: View initialized successfully
+[2024-09-16 02:37:00] INFO src/controller.c:45: Editor initialized successfully
+[2024-09-16 02:37:08] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:10] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:10] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:13] INFO src/controller.c:61: Quit command received
+[2024-09-16 02:37:13] INFO src/controller.c:202: Editor cleanup completed
+[2024-09-16 02:37:13] INFO src/view.c:26: View cleanup completed
+[2024-09-16 02:37:13] INFO src/main.c:47: Application ended
+[2024-09-16 02:37:16] INFO src/main.c:9: Application started
+[2024-09-16 02:37:16] INFO src/view.c:20: View initialized successfully
+[2024-09-16 02:37:16] INFO src/controller.c:45: Editor initialized successfully
+[2024-09-16 02:37:19] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:20] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:20] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:22] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:23] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:23] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:23] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:28] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:29] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:30] INFO src/controller.c:61: Quit command received
+[2024-09-16 02:37:30] INFO src/controller.c:202: Editor cleanup completed
+[2024-09-16 02:37:30] INFO src/view.c:26: View cleanup completed
+[2024-09-16 02:37:30] INFO src/main.c:47: Application ended
+[2024-09-16 02:37:35] INFO src/main.c:9: Application started
+[2024-09-16 02:37:35] INFO src/view.c:20: View initialized successfully
+[2024-09-16 02:37:35] INFO src/controller.c:45: Editor initialized successfully
+[2024-09-16 02:37:40] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:37:42] INFO src/controller.c:61: Quit command received
+[2024-09-16 02:37:42] INFO src/controller.c:202: Editor cleanup completed
+[2024-09-16 02:37:42] INFO src/view.c:26: View cleanup completed
+[2024-09-16 02:37:42] INFO src/main.c:47: Application ended
+[2024-09-16 02:44:07] INFO src/main.c:9: Application started
+[2024-09-16 02:44:07] INFO src/view.c:20: View initialized successfully
+[2024-09-16 02:44:07] INFO src/controller.c:46: Editor initialized successfully
+[2024-09-16 02:44:08] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:16] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:17] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:17] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:19] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:22] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:23] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:23] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:24] ERROR src/main.c:34: Error handling input: Failed to create prompt window
+[2024-09-16 02:44:25] ERROR src/main.c:34: Error handling input: Failed to create prompt window
