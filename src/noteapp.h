@@ -50,52 +50,54 @@ extern TodoList todo_list;
  * *********************
  */
 
+void parse_todo(const char *line);
+void render_todo_gui(WINDOW *win);
+bool should_render_todo_gui(void);
 
 // C
-int check_syntax(const char* line, int* indent_change);
+int check_syntax(const char *line, int *indent_change);
 void cleanup_ncurses();
-void copy_selection(Document* doc);
+void copy_selection(Document *doc);
 
 // D
-void draw_title_bar(WINDOW* win, const char* title);
-void draw_status_bar(WINDOW* win, Document* doc);
-void draw_sidebar(WINDOW* win);
-void delete_char(Document* doc, WINDOW* win);
-void delete_char_forward(Document* doc, WINDOW* win);
-void display_deej_ascii_art(WINDOW* win);
+void draw_title_bar(WINDOW *win, const char *title);
+void draw_status_bar(WINDOW *win, Document *doc);
+void draw_sidebar(WINDOW *win);
+void delete_char(Document *doc, WINDOW *win);
+void delete_char_forward(Document *doc, WINDOW *win);
+void display_deej_ascii_art(WINDOW *win);
 
 // F
-void free_document(Document* doc);
+void free_document(Document *doc);
 
 // H
-void handle_input(int ch, Document* doc, WINDOW* win, bool* quit);
-void handle_command(Document* doc, const char* command, bool* quit);
+void handle_input(int ch, Document *doc, WINDOW *win, bool *quit);
+void handle_command(Document *doc, const char *command, bool *quit);
 
 // I
 void init_ncurses();
-void init_document(Document* doc);
-void insert_char(Document* doc, WINDOW* win, char c);
-void insert_newline(Document* doc, WINDOW* win);
+void init_document(Document *doc);
+void insert_char(Document *doc, WINDOW *win, char c);
+void insert_newline(Document *doc, WINDOW *win);
 
 // L
-bool line_contains_todo(const char* line);
+bool line_contains_todo(const char *line);
 
-//M
-void move_cursor(Document* doc, WINDOW* win, int dx, int dy);
-void move_word_backward(Document* doc);
-void move_word_forward(Document* doc);
+// M
+void move_cursor(Document *doc, WINDOW *win, int dx, int dy);
+void move_word_backward(Document *doc);
+void move_word_forward(Document *doc);
 
 // P
-void paste_clipboard(Document* doc);
-void parse_todo(const char* line);
+void paste_clipboard(Document *doc);
+void parse_todo(const char *line);
 
 // R
-void remove_todo(const char* line);
-void render_document(WINDOW* win, Document* doc);
-void render_todo_gui(WINDOW* win);
+void remove_todo(const char *line);
+void render_document(WINDOW *win, Document *doc);
+void render_todo_gui(WINDOW *win);
 
 // S
 bool should_render_todo_gui(void);
-
 
 #endif // NOTE_APP_H

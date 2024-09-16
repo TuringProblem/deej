@@ -95,32 +95,7 @@ void insert_newline(Document *doc, WINDOW *win) {
     render_document(win, doc);
   }
 }
-void delete_char(Document *doc, WINDOW *win) {
-  if (doc->cursor_x > 0) {
-    char *line = doc->buffer.lines[doc->cursor_y];
-    memmove(&line[doc->cursor_x - 1], &line[doc->cursor_x],
-            strlen(&line[doc->cursor_x]) + 1);
-    doc->cursor_x--;
 
-    parse_todo(line);
-
-    mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
-    wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
-    wclrtoeol(win);
-
-    if (should_render_todo_gui()) {
-      render_todo_gui(win);
-    }
-
-    wrefresh(win);
-  } else if (doc->cursor_y > 0) {
-    // TODO: (existing code for merging lines)
-
-    parse_todo(doc->buffer.lines[doc->cursor_y]);
-
-    render_document(win, doc);
-  }
-}
 void delete_char_forward(Document *doc, WINDOW *win) {
   char *line = doc->buffer.lines[doc->cursor_y];
   if (line[doc->cursor_x] != '\0') {
@@ -129,6 +104,7 @@ void delete_char_forward(Document *doc, WINDOW *win) {
 
     parse_todo(line);
 
+    // Update only the current line
     mvwprintw(win, doc->cursor_y - doc->scroll_offset + 1, 1, "%s", line);
     wmove(win, doc->cursor_y - doc->scroll_offset + 1, doc->cursor_x + 1);
     wclrtoeol(win);
@@ -139,12 +115,54 @@ void delete_char_forward(Document *doc, WINDOW *win) {
 
     wrefresh(win);
   } else if (doc->cursor_y < doc->buffer.num_lines - 1) {
-    // TODO: (existing code for merging lines)
+    // Merge with next line
+    char *next_line = doc->buffer.lines[doc->cursor_y + 1];
+    strcat(line, next_line);
+    free(next_line);
+    for (int i = doc->cursor_y + 1; i < doc->buffer.num_lines - 1; i++) {
+      doc->buffer.lines[i] = doc->buffer.lines[i + 1];
+    }
+    doc->buffer.num_lines--;
 
-    parse_todo(doc->buffer.lines[doc->cursor_y]);
+    parse_todo(line);
 
     render_document(win, doc);
   }
+}
+void delete_char(Document *doc, WINDOW *win) {
+  if (doc->cursor_x > 0) {
+    // Delete character within the line
+    char *line = doc->buffer.lines[doc->cursor_y];
+    memmove(&line[doc->cursor_x - 1], &line[doc->cursor_x],
+            strlen(&line[doc->cursor_x]) + 1);
+    doc->cursor_x--;
+  } else if (doc->cursor_y > 0) {
+    // At the beginning of a line, merge with the previous line
+    char *current_line = doc->buffer.lines[doc->cursor_y];
+    char *prev_line = doc->buffer.lines[doc->cursor_y - 1];
+    size_t prev_len = strlen(prev_line);
+    size_t curr_len = strlen(current_line);
+
+    // Ensure we don't exceed MAX_LINE_LENGTH
+    if (prev_len + curr_len < MAX_LINE_LENGTH) {
+      strcat(prev_line, current_line);
+      doc->cursor_x = prev_len;
+      doc->cursor_y--;
+
+      // Free the current line and shift remaining lines up
+      free(current_line);
+      for (int i = doc->cursor_y + 1; i < doc->buffer.num_lines - 1; i++) {
+        doc->buffer.lines[i] = doc->buffer.lines[i + 1];
+      }
+      doc->buffer.num_lines--;
+    }
+  }
+
+  // Update the TODO list if necessary
+  parse_todo(doc->buffer.lines[doc->cursor_y]);
+
+  // Refresh the entire document
+  render_document(win, doc);
 }
 
 void render_document(WINDOW *win, Document *doc) {
@@ -161,12 +179,35 @@ void render_document(WINDOW *win, Document *doc) {
   for (int i = doc->scroll_offset;
        i < doc->buffer.num_lines && i - doc->scroll_offset < win_height - 2;
        i++) {
-    mvwprintw(win, start_y + i - doc->scroll_offset, start_x, "%.*s",
-              win_width - 2, doc->buffer.lines[i]);
+    char *line = doc->buffer.lines[i];
+    int x = start_x;
+    for (int j = 0; line[j] != '\0' && x < win_width - 2; j++) {
+      if (strncmp(&line[j], "**TODO**(", 9) == 0) {
+        wattron(win,
+                COLOR_PAIR(1)); // Assuming COLOR_PAIR(1) is defined for TODO
+      } else if (line[j] == '*' && line[j + 1] == '*') {
+        wattron(win, A_BOLD);
+        j++; // Skip the second *
+      } else if (line[j] == '_') {
+        wattron(win, A_UNDERLINE);
+      }
+
+      mvwaddch(win, start_y + i - doc->scroll_offset, x, line[j]);
+      x++;
+
+      if (strncmp(&line[j], "**TODO**(", 9) == 0) {
+        wattroff(win, COLOR_PAIR(1));
+      } else if (line[j] == '*' && j > 0 && line[j - 1] == '*') {
+        wattroff(win, A_BOLD);
+      } else if (line[j] == '_') {
+        wattroff(win, A_UNDERLINE);
+      }
+    }
   }
 
+  // Highlight selected text in VISUAL mode
   if (doc->mode == MODE_VISUAL) {
-    // TODO: (implement visual selection highlighting)
+    // ... (implement visual selection highlighting)
   }
 
   // Render TODO GUI if needed
@@ -174,6 +215,7 @@ void render_document(WINDOW *win, Document *doc) {
     render_todo_gui(win);
   }
 
+  // Position the cursor
   wmove(win, start_y + doc->cursor_y - doc->scroll_offset,
         start_x + doc->cursor_x);
 
@@ -286,7 +328,7 @@ void display_art(WINDOW *win, const char **deej_ascii, int height, int width,
 
 void display_deej_ascii_art(WINDOW *win) {
   const char *deej_ascii[] = {
-      "    ____  ___________     __",   "   / __ \\/ ____/ ____/    / /",
+      "    ____  ___________      __",  "   / __ \\/ ____/ ____/    / /",
       "  / / / / __/ / __/ __   / / ",  " / /_/ / /___/ /___/ /_ / /  ",
       "/_____/_____/_____/\\__//_/   ", "                             ",
       "  Text Editor Extraordinaire ",  "                             ",
