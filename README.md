@@ -3,13 +3,14 @@
        / __ \/ ____/ ____/    / /
       / / / / __/ / __/ __   / / 
      / /_/ / /___/ /___/ /__/ /  
-    /_____/_____/_____/\_____/  
+    /_____/_____/_____/\_//__/  
    #### Text Editor Extraordinaire
    ## Author: ```@Override```
 
 ## Will have Vim Motions
 # DEMO:
-![ubuntu_OdBKrsX1op](https://github.com/user-attachments/assets/5010c5f5-8090-439d-bef9-386d85e14838)
+![ubuntu_LGYuR8x4EE](https://github.com/user-attachments/assets/4c6d22d8-7583-4079-9992-f0ebe3ebbd4e)
+
 ### How to use;
 | ***Direction/Inputs*** | ***Normal** Mode* | ***Visual** Mode* | ***Insert** Mode* | ***DESCRIPTION***|
 |------------------|------------|-------------|-------------|-------------------------------------------|
@@ -33,8 +34,8 @@
 # how to use TODO function:
     Syntax required is as follows:
     
-    {it MUST BE WRAPPED WITH DOUBLE ** followed with 'TODO'}
-    ie:
+### {it MUST BE WRAPPED WITH DOUBLE ** followed with 'TODO'}
+ie:
     
         **TODO**
 
