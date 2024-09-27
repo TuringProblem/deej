@@ -14,9 +14,9 @@ typedef struct {
   bool single_per_file;
 } SyntaxRule;
 
-SyntaxRule syntax_rules[MAX_SYNTAX_RULES] = {{"**TODO**(", ");", 1, true},
-                                             {"$$DONE$$", "{", 1, true},
-                                             {"#!COLOR!#", "{", 1, false},
+SyntaxRule syntax_rules[MAX_SYNTAX_RULES] = {{"@TODO(", ");", 1, true},
+                                             {"@DONE", "{", 1, true},
+                                             {"@COLOR", "{", 1, false},
                                              {"**", "**", 0, false},
                                              {"[", "]", 0, false}};
 
@@ -43,11 +43,11 @@ void parse_todo(const char *line) {
     return;
   }
 
-  if (strstr(line, "**TODO**(") != NULL) {
+  if (strstr(line, "@TODO(") != NULL) {
     todo_active = true;
     todo_list.count = 0; // Clear existing TODOs
 
-    char *start = strstr(line, "**TODO**(") + 9;
+    char *start = strstr(line, "@TODO(") + 9;
     char *end = strchr(start, ')');
 
     if (end != NULL) {
@@ -82,7 +82,7 @@ void parse_todo(const char *line) {
     }
   } else {
     todo_active = false;
-    todo_list.count = 0; // Clear TODOs if **TODO**( is not found
+    todo_list.count = 0; // Clear TODOs if @TODO( is not found
   }
 }
 
