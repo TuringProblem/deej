@@ -18,9 +18,9 @@ int main() {
   WINDOW *status_win = newwin(1, max_x, max_y - 1, 0);
   WINDOW *sidebar_win = newwin(max_y - 2, 20, 1, 0);
 
-  draw_title_bar(title_win, "DEEJ - Text Editor");
+  draw_title_bar(title_win, "DEEJ - Text Editor8=D");
 
-  Document doc;
+  struct Document doc;
   init_document(&doc);
 
   // Prompt for filename

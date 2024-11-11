@@ -4,7 +4,7 @@
 char *clipboard = NULL;
 size_t clipboard_length = 0;
 
-void init_document(Document *doc) {
+void init_document(struct Document *doc) {
   for (int i = 0; i < MAX_LINES; i++) {
     doc->buffer.lines[i] = NULL;
   }
@@ -19,7 +19,7 @@ void init_document(Document *doc) {
   doc->mode = MODE_NORMAL;
 }
 
-void free_document(Document *doc) {
+void free_document(struct Document *doc) {
   for (int i = 0; i < doc->buffer.num_lines; i++) {
     free(doc->buffer.lines[i]);
   }
@@ -33,7 +33,7 @@ int get_indentation(const char *line) {
   return indent;
 }
 
-void insert_char(Document *doc, WINDOW *win, char c) {
+void insert_char(struct Document *doc, WINDOW *win, char c) {
   if (doc == NULL || doc->buffer.lines[doc->cursor_y] == NULL) {
     return;
   }
@@ -61,7 +61,7 @@ void insert_char(Document *doc, WINDOW *win, char c) {
   }
 }
 
-void insert_newline(Document *doc, WINDOW *win) {
+void insert_newline(struct Document *doc, WINDOW *win) {
 
   if (doc->buffer.num_lines < MAX_LINES - 1) {
     char *current_line = doc->buffer.lines[doc->cursor_y];
@@ -96,7 +96,7 @@ void insert_newline(Document *doc, WINDOW *win) {
   }
 }
 
-void delete_char_forward(Document *doc, WINDOW *win) {
+void delete_char_forward(struct Document *doc, WINDOW *win) {
   char *line = doc->buffer.lines[doc->cursor_y];
   if (line[doc->cursor_x] != '\0') {
     memmove(&line[doc->cursor_x], &line[doc->cursor_x + 1],
@@ -129,7 +129,7 @@ void delete_char_forward(Document *doc, WINDOW *win) {
     render_document(win, doc);
   }
 }
-void delete_char(Document *doc, WINDOW *win) {
+void delete_char(struct Document *doc, WINDOW *win) {
   if (doc->cursor_x > 0) {
     // Delete character within the line
     char *line = doc->buffer.lines[doc->cursor_y];
@@ -165,7 +165,7 @@ void delete_char(Document *doc, WINDOW *win) {
   render_document(win, doc);
 }
 
-void render_document(WINDOW *win, Document *doc) {
+void render_document(WINDOW *win, struct Document *doc) {
   int win_height, win_width;
   getmaxyx(win, win_height, win_width);
 
@@ -222,7 +222,7 @@ void render_document(WINDOW *win, Document *doc) {
   wrefresh(win);
 }
 
-void move_cursor(Document *doc, WINDOW *win, int dx, int dy) {
+void move_cursor(struct Document *doc, WINDOW *win, int dx, int dy) {
   int new_x = doc->cursor_x + dx;
   int new_y = doc->cursor_y + dy;
 
@@ -239,7 +239,7 @@ void move_cursor(Document *doc, WINDOW *win, int dx, int dy) {
   wrefresh(win);
 }
 
-void handle_input(int ch, Document *doc, WINDOW *win, bool *quit) {
+void handle_input(int ch, struct Document *doc, WINDOW *win, bool *quit) {
   switch (doc->mode) {
   case MODE_NORMAL:
     switch (ch) {
@@ -308,6 +308,10 @@ void handle_input(int ch, Document *doc, WINDOW *win, bool *quit) {
     break;
   case MODE_VISUAL:
     // ... (implement visual mode commands)
+    break;
+  case MODE_COMMAND:
+    // TODO:>>>Need to make sure to add the functionality for adding commands
+    // (Like Neovim) -> Look at their documentation
     break;
   }
 }

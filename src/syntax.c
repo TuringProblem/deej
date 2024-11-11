@@ -24,7 +24,7 @@ SyntaxRule syntax_rules[MAX_SYNTAX_RULES] = {{";todo(", ");", 1, true},
 
 int num_syntax_rules = 5;
 
-TodoList todo_list = {0};
+struct TodoList todo_list = {0};
 
 int check_syntax(const char *line, int *indent_change) {
   *indent_change = 0;

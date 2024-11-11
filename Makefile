@@ -8,9 +8,9 @@ BIN_DIR = bin
 
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-EXECUTABLE = $(BIN_DIR)/noteapp
+EXECUTABLE = $(BIN_DIR)/deej
 
-all: $(EXECUTABLE)
+deej: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) | $(BIN_DIR)
 	$(CC) $^ -o $@ $(LDFLAGS)
@@ -21,7 +21,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
+
+
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
 .PHONY: all clean
+
