@@ -1,0 +1,3 @@
+/Users/andrewwellington/deej/v2/build/CMakeFiles/main.dir
+/Users/andrewwellington/deej/v2/build/CMakeFiles/edit_cache.dir
+/Users/andrewwellington/deej/v2/build/CMakeFiles/rebuild_cache.dir
